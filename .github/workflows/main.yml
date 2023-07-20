@@ -7,10 +7,16 @@ jobs:
   deployment:
     runs-on: ubuntu-latest
     steps:
-    - name: Deploy Stage
-      uses: fjogeleit/http-request-action@v1
-      with:
-        url: 'https://655de99d-e5d4-415e-839f-9c9d05e0a7ab.mock.pstmn.io/api/ci/scheduleTask'
-        method: 'POST'
-        customHeaders: '{"Content-Type": "application/json"}'
-        data: '{"key_1": "value_1", "key_2": "value_2"}'
+      - name: Make Request
+        id: myRequest
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: 'https://655de99d-e5d4-415e-839f-9c9d05e0a7ab.mock.pstmn.io/api/ci/scheduleTask'
+          method: 'POST'
+          customHeaders: '{"Content-Type": "application/json"}'
+          data: '{"key_1": "value_1", "key_2": "value_2"}'
+      - name: Show Response
+        run: |
+          echo ${{ steps.myRequest.outputs.response }}
+          echo ${{ steps.myRequest.outputs.headers }}
+          echo ${{ fromJson(steps.myRequest.outputs.response).field_you_want_to_access }}
